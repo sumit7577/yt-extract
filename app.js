@@ -1,21 +1,20 @@
-const express = require('express'); 
-const bodyParser = require('body-parser') 
-const youtubedl = require('youtube-dl-exec') 
+const express = require('express');
+const bodyParser = require('body-parser')
+const youtubedl = require('youtube-dl-exec')
 
 //init app 
 const app = express();
-  
-//body parser middleware
-app.use(bodyParser.urlencoded({extended:false}))
-app.use(bodyParser.json())
- 
- 
 
-app.post("/getYtjson/", (req, res) =>{
+//body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+
+
+app.post("/getYtjson/", (req, res) => {
     let url = decodeURIComponent(req.body.url)
 
-    try
-    {
+    try {
         youtubedl(url, {
             dumpSingleJson: true,
             noWarnings: true,
@@ -24,22 +23,22 @@ app.post("/getYtjson/", (req, res) =>{
             preferFreeFormats: true,
             youtubeSkipDashManifest: true,
             referer: url
-          }).then(output =>
-            {
-                res.status(200).json(output)
-            })
-    }catch(e)
-    {
-        res.status(500).json({success:false,message:"Please enter valid url!"})
+        }).then(output => {
+            res.status(200).json(output)
+        }).catch(e => {
+            res.status(500).json({ success: false, message: "Please enter valid url!" })
+        })
+    } catch (e) {
+        res.status(500).json({ success: false, message: "Please enter valid url!" })
     }
-    
+
 
 });
 
 
- 
+
 
 //start server
-app.listen(8082,()=>{
+app.listen(8082, () => {
     console.log("server started on 8082")
 })
